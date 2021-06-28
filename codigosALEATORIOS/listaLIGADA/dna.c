@@ -50,16 +50,22 @@ char mostrar(PILHA *pilha)
 void comparar(PILHA *pilha, int tamanho)
 {
 	char aux1, aux2;
-	int i=0, somad = 0;
+	int i, somad = 0;
 
-	for (i; i < tamanho/2; ++i)
+	for (i=0; i < tamanho/2; ++i)
 	{
 		aux1 = mostrar(pilha);
 		aux2 = mostrar(pilha);
 		
 		if ((aux1 == 'A' && aux2 == 'T')
 		||
-            (aux1 == 'T' && aux2 == 'A'))
+            (aux1 == 'T' && aux2 == 'A')
+		||
+			(aux1 == 'G' && aux2 == 'C')
+		||
+			(aux1 == 'C' && aux2 == 'G')
+		||
+			(aux1 == 'A' && aux2 == 'T'))
 		{
 			++somad;
 		}
@@ -84,20 +90,18 @@ int main()
 {
 	int i, j;
 	int *vet;
-	char nitrogenadas[0];
+	char nitrogenadas[2];
 	PILHA *pilha;
-    //puts("Digite 10: "); no exemplo é desnecessário  
+    
 	scanf("%d", &j);
 
-	setlocale(LC_ALL, "Portuguese");
-	//para os comentários
 	
 	pilha = (PILHA *)malloc(sizeof(pilha));
 
 	pilha->comeco = NULL;
 	pilha->quant = 0;
 
-	for (i = 0; i < j; i++)
+	for (i = 0; i < j; ++i)
 	{
 		scanf("%s", nitrogenadas);
 		incluir(pilha, nitrogenadas);
