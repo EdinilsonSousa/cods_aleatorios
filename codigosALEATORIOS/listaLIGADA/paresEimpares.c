@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,204 +5,180 @@ typedef struct lista
 {
     int qtd;
     struct registro *inicio;
-} lista;
+    struct registro *final;
+}lista;
 
 typedef struct registro
 {
     int valor;
     struct registro *prox;
-} registro;
+    struct registro *ant;
+}registro;
 
-registro *aloca_registro();
-lista *aloca_lista();
-void incluir_na_lista(lista *l, int x);
-void mostrar(lista *l);
-void remove_na_lista(lista *l, int x);
-void remove_todos_na_lista(lista *l, int x);
+lista *alocar_lista();
+registro *aloca_registro(int valor);
+void mostra_fila(lista *fila);
+void incluir_fila_pares(lista *fila, int valor);
+void incluir_fila_impares(lista *fila, int valor);
 
-int main()
+int main() 
 {
-    lista *lista_de_pares, *lista_de_impares;
-    int numero = 0;
+    lista *fila_pares, *fila_impares;   
+    int i=0, N=0, *vet, aux=0;
 
-    int i;
+    fila_pares   =  alocar_lista();
+    fila_impares =  alocar_lista();
+    
+    scanf("%d", &N);
 
-    lista_de_pares = aloca_lista();
-    lista_de_impares = aloca_lista();
-
-    for (i = 0; i < 10; i++)
+    vet = (int *)malloc(sizeof(int)*N);
+    
+    for(i=0; i<N; i++)
     {
-        printf("\n Digite um numero: ");
-        scanf("%d", &numero);
-
-        if (numero % 2 == 0)
+        scanf("%d", &aux);
+        
+        if(aux%2 == 0)
         {
-            incluir_na_lista(lista_de_pares, numero);
+            incluir_fila_pares(fila_pares, aux);
         }
         else
         {
-            incluir_na_lista(lista_de_impares, numero);
+            incluir_fila_impares(fila_impares, aux);
         }
     }
 
-    if (lista_de_pares->qtd>lista_de_impares->qtd)
-    {
-        mostrar(lista_de_pares);
-    }
-    else
-    {
-        mostrar(lista_de_impares);
-    }
-
-    return 0;    
+    mostra_fila(fila_pares);
+    mostra_fila(fila_impares);
 }
 
-lista *aloca_lista()
+lista *alocar_lista()
 {
-    lista *nova_lista;
+    lista *a;
 
-    nova_lista = (lista *)malloc(sizeof(lista));
-    nova_lista->qtd = 0;
-    nova_lista->inicio = NULL;
-    return nova_lista;
+    a = (lista*)malloc(sizeof(lista));
+    a->qtd = 0;
+    a->inicio = NULL;
+    a->final = NULL;
+
+    return a;
 }
 
-registro *aloca_registro()
+registro *aloca_registro(int valor)
 {
-    registro *novo_registro;
-    novo_registro = (registro *)malloc(sizeof(registro));
-    novo_registro->valor = 0;
-    novo_registro->prox = NULL;
-    return novo_registro;
+    registro *a;
+
+    a = (registro *)malloc(sizeof(registro));
+    a->valor = valor;
+    a->prox = NULL;
+    a->ant = NULL;
+
+    return a;
 }
 
-void incluir_na_lista(lista *l, int x)
+void mostra_fila(lista *fila)
 {
-    registro *novo, *aux;
-    novo = aloca_registro();
-    novo->valor = x;
-
-    if (l->inicio == NULL)
-    {
-        l->inicio = novo;
-    }
-    else
-    {
-        aux = l->inicio;
-
-        while (aux->prox != NULL)
-        {
-            aux = aux->prox;
-        }
-
-        aux->prox = novo;
-    }
-
-    l->qtd++;
-}
-
-void mostrar(lista *l)
-{
+    int teste=0;
     registro *aux;
 
-    if (l->qtd == 0)
+    aux = fila->inicio;
+    while(aux != NULL)
     {
-        printf("\n Lista vazia");
+        printf("%d", aux->valor);
+        aux = aux->prox;
+
+        if(aux != NULL)
+        {
+            printf(" ");
+        }
+        else
+        {
+            printf("\n");
+        }
+    }
+}
+
+void incluir_fila_pares(lista *fila, int valor)
+{
+    registro *novo, *aux;
+    
+    novo = aloca_registro(valor);
+
+    if(fila->inicio == NULL)
+    {
+        fila->inicio = novo;
+        fila->final = novo;
+    }
+    else if(novo->valor < fila->inicio->valor)
+    {
+        novo->prox        = fila->inicio;
+        fila->inicio->ant = novo;
+        fila->inicio      = novo;
+    }
+    else if(novo->valor > fila->final->valor)
+    {
+        fila->final->prox = novo;
+        novo->ant         = fila->final;
+        fila->final       = novo;
     }
     else
     {
-        aux = l->inicio;
-        while (aux != NULL)
+        aux = fila->inicio;
+        while(novo->valor > aux->valor)
         {
-            printf("\n%d", aux->valor);
             aux = aux->prox;
         }
+        novo->prox     = aux;
+        novo->ant      = aux->ant; 
+        aux->ant->prox = novo;
+        aux->ant       = novo;
     }
+
+    fila->qtd++;
 }
 
-void remove_na_lista(lista *l, int x)
+void incluir_fila_impares(lista *fila, int valor)
 {
+    registro *novo, *aux;
+    
+    novo = aloca_registro(valor);
 
-    registro *welisson, *morcego;
-
-    if (l->inicio == NULL)
+    if(fila->inicio == NULL)
     {
-        printf("\n lista vazia");
-        return;
+        fila->inicio = novo;
+        fila->final = novo;
     }
-    welisson = l->inicio;
-
-    while (welisson != NULL)
+    else if(novo->valor > fila->inicio->valor)
     {
-        if (welisson->valor == x)
-        {
-            if (morcego == NULL)
-            {
-                l->inicio = welisson->prox;
-            }
-            else
-            {
-                morcego->prox = welisson->prox;
-            }
+        aux = fila->inicio;
 
-            free(welisson);
-            l->qtd--;
-            printf("\n Removido com sucesso");
-            return;
-        }
-        else
-        {
-            morcego = welisson;
-            welisson = welisson->prox;
-        }
+        novo->prox        = fila->inicio;
+        fila->inicio->ant = novo;
+        fila->inicio      = novo;
     }
-    printf("\n Elemento nao foi encontrado na lista");
+    else if(novo->valor < fila->final->valor)
+    {
+        fila->final->prox = novo;
+        novo->ant         = fila->final;
+        fila->final       = novo;
+    }
+    else
+    {
+        aux = fila->inicio;
+        while(novo->valor < aux->valor)
+        {
+            aux = aux->prox;
+        }
+        novo->ant = aux->ant;
+        novo->prox = aux;
+        aux->ant->prox = novo;
+    }
 
-    return;
+    fila->qtd++;
 }
+/* Entrada
+10
+4 32 34 543 3456 654 567 87 6789 98
 
-void remove_todos_na_lista(lista *l, int x)
-{
-
-    registro *welisson, *morcego;
-    int apagou = 0;
-
-    if (l->inicio == NULL)
-    {
-        printf("\n lista vazia");
-        return;
-    }
-    welisson = l->inicio;
-
-    while (welisson != NULL)
-    {
-        if (welisson->valor == x)
-        {
-            if (morcego == NULL)
-            {
-                l->inicio = welisson->prox;
-            }
-            else
-            {
-                morcego->prox = welisson->prox;
-            }
-
-            free(welisson);
-            l->qtd--;
-            printf("\n Removido com sucesso");
-            apagou = 1;
-            welisson = morcego->prox;
-        }
-        else
-        {
-            morcego = welisson;
-            welisson = welisson->prox;
-        }
-    }
-    if (!apagou)
-    {
-        printf("\n Elemento nao foi encontrado na lista");
-    }
-
-    return;
-}
+Saída
+4 32 34 98 654 3456
+6789 567 543 87*/
