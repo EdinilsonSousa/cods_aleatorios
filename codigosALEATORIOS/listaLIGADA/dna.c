@@ -59,7 +59,7 @@ void comparar(PILHA *pilha, int tamanho)
 		
 		if ((aux1 == 'A' && aux2 == 'T')
 		||
-            (aux1 == 'T' && aux2 == 'A')
+            		(aux1 == 'T' && aux2 == 'A')
 		||
 			(aux1 == 'G' && aux2 == 'C')
 		||
