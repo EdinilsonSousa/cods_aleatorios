@@ -7,13 +7,13 @@ void mostrar(int *vet, int TAM)
 
     for(i=0; i<TAM; i++)
     {
-        i++;
-        for(j=i; j<TAM; j++)
+        for(j=i+1; j<TAM; j++)
         {
            if(vet[i] > vet[j])
             {
                 aux = vet[i];
                 vet[i] = vet[j];
+				vet[j] = aux;
             }
         }
     }
@@ -21,19 +21,19 @@ void mostrar(int *vet, int TAM)
 
 int fila(int *vet, int TAM)
 {
-    int i, j=0, soma=0;
+    int i=0, j=0, soma=0;
     int aux=0; 
 
     for(i=0; i<TAM; i++)
     {
+        soma = 0;
         for(j=0; j<i; j++)
         {
-            soma = 0;
             soma += vet[j];
         }
         if(soma<=vet[i])
         {
-            aux+=1;
+            ++aux;
         }
     }
     return aux;
@@ -44,10 +44,11 @@ int main()
     int j, i, aux;
     int *pont; 
     scanf("%d", &j);
+	pont = (int *)malloc(sizeof(int)*j);
 
-    for(i=0; i<j; i)
+    for(i=0; i<j; i++)
     {
-        scanf("%d", &pont[i++]);
+        scanf("%d", &pont[i]);
     }
     mostrar(pont, j);
     
