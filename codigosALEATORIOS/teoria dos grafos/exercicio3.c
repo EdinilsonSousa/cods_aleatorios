@@ -30,6 +30,7 @@ typedef struct lista
     struct registro *inicio;
 } lista;
 
+
 typedef struct registro
 {
     int valor;
