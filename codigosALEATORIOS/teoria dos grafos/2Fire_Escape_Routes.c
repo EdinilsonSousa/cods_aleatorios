@@ -76,7 +76,7 @@ int main()
     int confirma_solucoes, i, j, k = 0;
 
     scanf("%d", &confirma_solucoes);
-    int qtd_vert = 0, qtdArestas = 0, a, b;
+    int qtd_vert, qtdArestas = 0, a, b;
     for (i=0; i < confirma_solucoes; i+=1)
     {
         int contador = 0;
