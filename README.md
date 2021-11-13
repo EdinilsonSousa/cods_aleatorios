@@ -1,4 +1,4 @@
-# my-cod
+# pequena revisão
 full
 #include <stdio.h>
 #include <stdlib.h>
