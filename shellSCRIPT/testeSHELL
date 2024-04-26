@@ -1,0 +1,296 @@
+#!/bin/bash
+clear
+
+# Define variables
+data=`date +"%d/%m/%Y %T"`
+data_bkp=`date +"%d%m%Y%H%M%S"`
+diretorio_padrao=`pwd`
+diretorio_bkp="${diretorio_padrao}/diretorio_backup"
+
+# Function to update package lists
+Update_Packages() {
+    echo "Updating package lists..."
+    sudo apt update -y  # Update package lists for Debian/Ubuntu based systems
+    # Or use: sudo yum update -y for Red Hat/CentOS based systems
+    Log "Updated package lists"
+}
+
+# Function to upgrade system packages
+Upgrade_System() {
+    echo "Upgrading packages..."
+    sudo apt upgrade -y  # Upgrade installed packages for Debian/Ubuntu based systems
+    # Or use: sudo yum upgrade -y for Red Hat/CentOS based systems
+    Log "Upgraded system packages"
+}
+
+# Function to remove unnecessary packages
+Autoremove_Packages() {
+    echo "Removing unnecessary packages..."
+    sudo apt autoremove -y  # Remove unnecessary packages for Debian/Ubuntu based systems
+    # Or use: sudo yum autoremove -y for Red Hat/CentOS based systems
+    Log "Removed unnecessary packages"
+}
+
+# Function to clean package cache
+Clean_Package_Cache() {
+    echo "Cleaning package cache..."
+    sudo apt clean  # Clean package cache for Debian/Ubuntu based systems
+    # Or use: sudo yum clean all for Red Hat/CentOS based systems
+    Log "Cleaned package cache"
+}
+
+# Function to start a chat server
+Start_Chat_Server() {
+    read -p "Enter a port to listen on: " port
+    echo "Starting chat server on port ${port}..."
+    nc -l -p "${port}" | while read -r message; do
+        echo "Received: ${message}"
+    done
+}
+
+# Function to connect to a chat server
+Connect_to_Chat_Server() {
+    read -p "Enter the server hostname or IP address: " server
+    read -p "Enter the server port: " port
+    echo "Connecting to chat server at ${server}:${port}..."
+    nc "${server}" "${port}" | while read -r message; do
+        echo "Received: ${message}"
+    done
+}
+
+# Function to create a directory
+Create_Directory() {
+    read -p "Enter the directory name: " dirname
+    mkdir "${dirname}" && Log "Created directory: ${dirname}"
+}
+
+# Function to change the current directory
+Change_Directory() {
+    read -p "Enter the directory path: " dirpath
+    cd "${dirpath}" || Log "Failed to change directory to: ${dirpath}"
+}
+
+# Function to create a file
+Create_File() {
+    read -p "Enter the file name: " filename
+    touch "${filename}" && Log "Created file: ${filename}"
+}
+
+# Function to delete a file
+Delete_File() {
+    read -p "Enter the file name to delete: " filename
+    rm -i "${filename}" && Log "Deleted file: ${filename}"
+}
+
+# Function to rename a file
+Rename_File() {
+    read -p "Enter the current file name: " current_name
+    read -p "Enter the new file name: " new_name
+    mv "${current_name}" "${new_name}" && Log "Renamed file: ${current_name} to ${new_name}"
+}
+
+# Function to show disk usage
+Show_Disk_Usage() {
+    echo "Disk usage:"
+    df -h
+}
+
+# Function to show system resource usage
+Show_System_Status() {
+    echo "System resource usage:"
+    top -n 1
+}
+
+# Function to show system version
+Show_System_Version() {
+    lsb_release -a
+}
+
+# Function to monitor a network interface with tcpdump
+Monitor_Network_Interface() {
+    read -p "Enter the network interface name (e.g., eth0): " interface
+    sudo tcpdump -i "${interface}"
+}
+
+# Function to show disk usage with timestamps using du command
+Disk_Usage_With_Timestamp() {
+    read -p "Enter the directory path: " dirpath
+    du -ah --time "${dirpath}"
+}
+
+# Function to schedule script execution
+Schedule_Script() {
+    read -p "Enter the time and date to schedule the script (e.g., 'tomorrow 3:00 PM'): " schedule_time
+    echo "Scheduling the script for execution at ${schedule_time}..."
+    at "${schedule_time}" -f "${0}"
+}
+
+# Function to check for open ports on a host
+Check_Open_Ports() {
+    read -p "Enter the host to check for open ports: " host
+    echo "Checking for open ports on host ${host}..."
+    nmap "${host}"
+}
+
+# Function to monitor a log file for suspicious activity
+Monitor_Log_Files() {
+    read -p "Enter the path to the log file: " log_file
+    echo "Monitoring log file ${log_file} for suspicious activity..."
+    tail -f "${log_file}"
+}
+
+# Function to set up firewall rules (placeholder)
+Set_Firewall_Rules() {
+    echo "Setting up firewall rules..."
+    # Add your firewall rule configuration commands here
+    Log "Set up firewall rules"
+}
+
+# Function for network diagnostics (e.g., ping)
+Network_Diagnostics() {
+    read -p "Enter the host or IP address to ping: " target_host
+    echo "Performing network diagnostics on ${target_host}..."
+    ping -c 5 "${target_host}"
+}
+
+# Function for logging
+Log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> myscript.log
+}
+
+# Main menu
+Menu() {
+    opcao=-1
+
+    while [ "${opcao}" != "0" -a "${opcao}" != "1" -a "${opcao}" != "2" -a "${opcao}" != "3" -a "${opcao}" != "4" -a "${opcao}" != "5" -a "${opcao}" != "6" -a "${opcao}" != "7" -a "${opcao}" != "8" -a "${opcao}" != "9" -a "${opcao}" != "10" -a "${opcao}" != "11" -a "${opcao}" != "12" -a "${opcao}" != "13" -a "${opcao}" != "14" -a "${opcao}" != "15" -a "${opcao}" != "16" -a "${opcao}" != "17" -a "${opcao}" != "18" ]
+    do
+        echo
+        echo "=-=-=- ESCOLHA UMA OPCAO =-=-=-"
+        echo "Opcao 1 - Realizar backup"
+        echo "Opcao 2 - Listar arquivo"
+        echo "Opcao 3 - Atualizar pacotes"
+        echo "Opcao 4 - Fazer upgrade do sistema"
+        echo "Opcao 5 - Remover pacotes desnecessários"
+        echo "Opcao 6 - Limpar cache de pacotes"
+        echo "Opcao 7 - Iniciar chat server"
+        echo "Opcao 8 - Conectar ao chat server"
+        echo "Opcao 9 - Mostrar informações de disco"
+        echo "Opcao 10 - Mostrar status do sistema"
+        echo "Opcao 11 - Mostrar versão do sistema"
+        echo "Opcao 12 - Monitorar interface de rede"
+        echo "Opcao 13 - Mostrar uso de disco com timestamps"
+        echo "Opcao 14 - Agendar execução do script"
+        echo "Opcao 15 - Verificar portas abertas em um host"
+        echo "Opcao 16 - Monitorar arquivo de log"
+        echo "Opcao 17 - Configurar Firewall"
+        echo "Opcao 18 - Realizar Diagnóstico de Rede"
+        echo "Opcao 0 - exit/Sair"
+
+        echo
+        read -p "->" opcao
+    done
+
+    if [ ${opcao} -eq 1 ]
+    then
+        echo
+        read -p "Escreva o nome da mascara do DSNAME: " nome_arq
+        backup "${nome_arq}"
+    fi
+
+    if [ ${opcao} -eq 2 ]
+    then
+        echo
+        read -p "Escreva o nome do Arquivo: " nome_arq
+        Lista_Arq "${nome_arq}"
+    fi
+
+    if [ ${opcao} -eq 3 ]
+    then
+        Update_Packages
+    fi
+
+    if [ ${opcao} -eq 4 ]
+    then
+        Upgrade_System
+    fi
+
+    if [ ${opcao} -eq 5 ]
+    then
+        Autoremove_Packages
+    fi
+
+    if [ ${opcao} -eq 6 ]
+    then
+        Clean_Package_Cache
+    fi
+
+    if [ ${opcao} -eq 7 ]
+    then
+        Start_Chat_Server
+    fi
+
+    if [ ${opcao} -eq 8 ]
+    then
+        Connect_to_Chat_Server
+    fi
+
+    if [ ${opcao} -eq 9 ]
+    then
+        Show_Disk_Usage
+    fi
+
+    if [ ${opcao} -eq 10 ]
+    then
+        Show_System_Status
+    fi
+
+    if [ ${opcao} -eq 11 ]
+    then
+        Show_System_Version
+    fi
+
+    if [ ${opcao} -eq 12 ]
+    then
+        Monitor_Network_Interface
+    fi
+
+    if [ ${opcao} -eq 13 ]
+    then
+        Disk_Usage_With_Timestamp
+    fi
+
+    if [ ${opcao} -eq 14 ]
+    then
+        Schedule_Script
+    fi
+
+    if [ ${opcao} -eq 15 ]
+    then
+        Check_Open_Ports
+    fi
+
+    if [ ${opcao} -eq 16 ]
+    then
+        Monitor_Log_Files
+    fi
+
+    if [ ${opcao} -eq 17 ]
+    then
+        Set_Firewall_Rules
+    fi
+
+    if [ ${opcao} -eq 18 ]
+    then
+        Network_Diagnostics
+    fi
+
+    if [ ${opcao} -eq 0 ]
+    then
+        echo
+        echo "Saindo do programa agora"
+        echo "Ate outra hora/dia"
+        exit 0
+    fi
+}
+
+Menu
